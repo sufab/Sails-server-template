@@ -1,6 +1,8 @@
 # Sails-server-template
 
 a [Sails](http://sailsjs.org) application - server side template with File system and User system, including: Local, Facebook and Google authentication.
+For more information: http://sailsjs.org/documentation/concepts/
+enjoy :)
 
 ## Installation
 Clone and run  
@@ -25,21 +27,25 @@ run
 $ sails lift
 ```
 
-**/auth/isloggedin** for isLoggedIn check
+routes
 
-**/auth/logout** for logout
+* **/auth/isloggedin** for isLoggedIn check
 
-**/file** (loggedIn users only) for uploading files
+* **/auth/logout** for logout
+
+* **/file** (loggedIn users only) for uploading files
+
 
 #### Local
-**/login** for login
+* **/login** for login
 
-**/signup** for signup
+* **/signup** for signup
+
 
 #### Facebook
-**/auth/facebook** for Facebook login
+* **/auth/facebook** for Facebook login
+
 
 #### Google
-**/auth/google** for Google login
-
+* **/auth/google** for Google login
 
