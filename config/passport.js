@@ -73,8 +73,8 @@ function findByFacebookId(id, fn) {
 }
 
 passport.use(new FacebookStrategy({
-    clientID: '808294869269670',
-    clientSecret: '761b67608cb39ef2af171ca934b2d8c4',
+    clientID: 'your-clientID',
+    clientSecret: 'your-clientSecret',
     callbackURL: hostname + '/auth/facebook/callback',
     enableProof: false
   }, 
@@ -120,8 +120,8 @@ function findByGoogleId(id, fn) {
 }
 
 passport.use(new GoogleStrategy({
-    clientID        : '680729757298-aqvh71v8fh2ni76h6dk20221jihck14b.apps.googleusercontent.com',
-    clientSecret    : 'aWrS9GfNH-jNIwhYxBhtLsaV',
+    clientID        : 'your-clientID',
+    clientSecret    : 'your-clientSecret',
     callbackURL     : hostname + '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
