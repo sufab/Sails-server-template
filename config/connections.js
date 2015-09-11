@@ -26,7 +26,7 @@ module.exports.connections = {
 
   mongo: {
     adapter: 'sails-mongo',
-    url: 'mongodb://admin:Codletech13@ds035713.mongolab.com:35713/cabs'
+    url: 'mongodb://username:password@path:port/db'
   },
 
   somePostgresqlServer: {

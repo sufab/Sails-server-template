@@ -4,7 +4,7 @@ var passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy,
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-var hostname = 'https://eitan-orhemi.c9.io';
+var hostname = 'http://localhost';
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
