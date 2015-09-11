@@ -9,15 +9,15 @@ $ npm install
 ```
 
 ## Configuration
-1. Change mongo url connection at config/connections.js
-2. Change hostname variable at config/passport.js 
+1. Change mongo url connection at **config/connections.js**
+2. Change hostname variable at **config/passport.js** 
 
 #### For Facebook and Google authentication
 3. Create developer account and register the hostname
-4. Change clientID and secretID at config/passport.js 
+4. Change clientID and secretID at **config/passport.js**
 
 #### For Amazon S3 File system
-5. Change key, secret and bucket at api/controllers/FileController.js
+5. Change key, secret and bucket at **api/controllers/FileController.js**
 
 ## Usage
 run 
@@ -26,11 +26,14 @@ $ sails lift
 ```
 
 **/auth/isloggedin** for isLoggedIn check
+
 **/auth/logout** for logout
+
 **/file** (loggedIn users only) for uploading files
 
 #### Local
 **/login** for login
+
 **/signup** for signup
 
 #### Facebook
