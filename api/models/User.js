@@ -11,12 +11,19 @@ module.exports = {
             minLength: 6
         },
         facebookId: {
-          type: 'string',
-          unique: true
+            type: 'string',
+            unique: true
         },
         googleId: {
-          type: 'string',
-          unique: true
+            type: 'string',
+            unique: true
+        },
+        email: {
+            type: 'string',
+            email: true
+        },
+        fullname: {
+            type: 'string'
         },
         toJSON: function() {
             var obj = this.toObject();
@@ -46,6 +53,7 @@ module.exports = {
     beforeUpdate: function(valuesToUpdate, cb) {
         // not editable fields
         delete valuesToUpdate.username;
+        delete valuesToUpdate.password;
         delete valuesToUpdate.facebookId;
         delete valuesToUpdate.googleId;
         cb();

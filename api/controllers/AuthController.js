@@ -11,15 +11,20 @@ module.exports = {
     logout: function(req, res) {
         if (req.isAuthenticated()) {
             req.logout();
-            res.ok('Logged out Successfully');
+            res.success('Logged out Successfully');
         }
         else
-            res.badRequest('Not logged in');
+            res.error('Not logged in');
     },
     
     isLoggedIn: function(req, res) {
         var isLoggedIn = req.isAuthenticated();
-        res.ok(isLoggedIn);
+        if (isLoggedIn) {
+            return res.success(isLoggedIn, { ans: true, user: req.user });
+        } else {
+            return res.success(isLoggedIn, { ans: false });
+        }
+        
     },
     
 // ####################################
@@ -30,17 +35,11 @@ module.exports = {
 
         passport.authenticate('local', function(err, user, info) {
             if ((err) || (!user)) {
-                return res.badRequest({
-                    message: info.message,
-                    user: user
-                });
+                return res.error(info.message, { error: err });
             }
             req.logIn(user, function(err) {
-                if (err) return res.serverError(err);
-                return res.ok({
-                    message: info.message,
-                    user: user
-                });
+                if (err) return res.error('Error trying to login (local)', { error: err });
+                return res.success(info.message, { user: user });
             });
 
         })(req, res);
@@ -51,21 +50,13 @@ module.exports = {
 // ####################################
     
     'facebook': function (req, res, next) {
-     passport.authenticate('facebook', { scope: ['email', 'user_photos']},
-        function (err, user, info) {
-
+     passport.authenticate('facebook', { scope: ['email', 'user_photos']}, function (err, user, info) {
             if ((err) || (!user)) {
-                return res.badRequest({
-                    message: info.message,
-                    user: user
-                });
+                return res.error(info.message, { error: err });
             }
             req.logIn(user, function(err) {
-                if (err) return res.serverError(err);
-                return res.ok({
-                    message: info.message,
-                    user: user
-                });
+                if (err) return res.error('Error trying to login (Facebook)', { error: err });
+                return res.success(info.message, { user: user });
             });
         })(req, res, next);
     },
@@ -73,7 +64,7 @@ module.exports = {
     'facebook/callback': function (req, res, next) {
      passport.authenticate('facebook',
         function (req, res) {
-            res.ok({ user: req.session.user });
+            res.success('', { user: req.session.user });
         })(req, res, next);
     },
   
@@ -82,21 +73,13 @@ module.exports = {
 // ####################################
 
     'google': function (req, res, next) {
-     passport.authenticate('google', { scope: 'email'},
-        function (err, user, info) {
-            
+     passport.authenticate('google', { scope: 'email'}, function (err, user, info) {
             if ((err) || (!user)) {
-                return res.badRequest({
-                    message: info.message,
-                    user: user
-                });
+                return res.error(info.message, { error: err });
             }
             req.logIn(user, function(err) {
-                if (err) return res.serverError(err);
-                return res.ok({
-                    message: info.message,
-                    user: user
-                });
+                if (err) return res.error('Error trying to login (Google)', { error: err });
+                return res.success(info.message, { user: user });
             });
         })(req, res, next);
     },
@@ -104,7 +87,7 @@ module.exports = {
     'google/callback': function (req, res, next) {
      passport.authenticate('google',
         function (req, res) {
-            res.ok({ user: req.session.user });
+            res.success('', { user: req.session.user });
         })(req, res, next);
     }
 };
