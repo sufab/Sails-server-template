@@ -21,8 +21,6 @@ module.exports = {
     upload: function (req, res) {
     req.file('file').upload({
       adapter: require('skipper-s3'),
-      key: 'AKIAJI345J5U6TCVDMTA',
-      secret: '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',
       bucket: 'eitancabs'
     }, function (err, filesUploaded) {
       if (err) return res.negotiate(err);
