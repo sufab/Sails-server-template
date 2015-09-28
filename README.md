@@ -12,14 +12,13 @@ $ npm install
 
 ## Configuration
 1. Change mongo url connection at **config/connections.js**
-2. Change hostname variable at **config/passport.js** 
 
 #### For Facebook and Google authentication
-3. Create developer account and register the hostname
+3. Create developer account and register http://localhost/callback as valid callback
 4. Change clientID and secretID at **config/passport.js**
 
 #### For Amazon S3 File system
-5. Change key, secret and bucket at **api/controllers/FileController.js**
+5. Change key, secret and bucket at **config/locals.js**
 
 ## Usage
 run 
