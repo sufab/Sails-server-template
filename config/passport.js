@@ -1,10 +1,8 @@
 var passport = require('passport'),
     bcrypt = require('bcryptjs'),
     LocalStrategy = require('passport-local').Strategy,
-    FacebookStrategy = require('passport-facebook').Strategy,
-    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-var hostname = 'http://localhost';
+    FacebookStrategy = require('passport-facebook-token').Strategy,
+    GoogleStrategy = require('passport-google-token').Strategy;
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -23,7 +21,7 @@ passport.deserializeUser(function (id, done) {
 function findById(id, fn) {
   User.findOne(id).exec(function (err, user) {
     if (err) {
-      return fn(null, null);
+      return fn(err, null);
     } else {
       return fn(null, user);
     }
@@ -38,20 +36,16 @@ passport.use(new LocalStrategy({
     User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect username' });
+        return done(null, false, { message: 'שם משתמש או סיסמא לא נכונים' });
       }
 
       bcrypt.compare(password, user.password, function (err, res) {
           if (err) { return done(err); }
 
           if (!res)
-            return done(null, false, { message: 'Invalid Password' });
-          var returnUser = {
-            username: user.username,
-            createdAt: user.createdAt,
-            id: user.id
-          };
-          return done(null, returnUser, { message: 'Logged In Successfully' });
+            return done(null, false, { message: 'שם משתמש או סיסמא לא נכונים'  });
+
+          return done(null, user, { message: 'Logged In Successfully' });
         });
     });
   }
@@ -62,11 +56,10 @@ passport.use(new LocalStrategy({
 // ####################################
 
 function findByFacebookId(id, fn) {
-  User.find({ facebookId: id }).exec(function (err, users) {
+  User.findOne({ facebookId: id }).exec(function (err, user) {
     if (err) {
       return fn(err, null);
     } else {
-      var user = users.length ? users[0]: null;
       return fn(null, user);
     }
   });
@@ -74,22 +67,27 @@ function findByFacebookId(id, fn) {
 
 passport.use(new FacebookStrategy({
     clientID: 'your-clientID',
-    clientSecret: 'your-clientSecret',
-    callbackURL: hostname + '/auth/facebook/callback',
-    enableProof: false
+    clientSecret: 'your-clientSecret'
   }, 
   function (accessToken, refreshToken, profile, done) {
     findByFacebookId(profile.id, function (err, user) {
       if (err) { return done(err); }
-
+      
       if (!user) {
+        var profileImg = '';
+        if (profile.photos.length) {
+            profileImg = profile.photos[0].value;
+        }
+        
         User.create({
-          facebookId: profile.id
+          facebookId: profile.id,
+          fullname: profile.displayName,
+          profileImg: profileImg
         }).exec(function (err, user) {
           if (user) {
             return done(null, user, { message: 'Logged In Successfully' });
           } else {
-            return done(err, null, { message: 'There was an error logging you in with Facebook' });
+            return done(err, null, { message: 'Error creating facebook user: ' +  profile.id});
           }
         });
 
@@ -109,34 +107,35 @@ passport.use(new FacebookStrategy({
 
 
 function findByGoogleId(id, fn) {
-  User.find({ googleId: id }).exec(function (err, users) {
+  User.findOne({ googleId: id }).exec(function (err, user) {
     if (err) {
       return fn(err, null);
     } else {
-      var user = users.length ? users[0]: null;
       return fn(null, user);
     }
   });
 }
 
 passport.use(new GoogleStrategy({
-    clientID        : 'your-clientID',
-    clientSecret    : 'your-clientSecret',
-    callbackURL     : hostname + '/auth/google/callback'
+    clientID: 'your-clientID',
+    clientSecret: 'your-clientSecret'
   },
   function(accessToken, refreshToken, profile, done) {
     findByGoogleId(profile.id, function (err, user) {
 
-      if (err) { return done(err); }
-
+      if (err) { return done(err, null, { message: 'There was an error trying to find googleId: ' + profile.id }); }
+      
       if (!user) {
+        var jsonProfile = profile._json;
         User.create({
-          googleId: profile.id
+          googleId: jsonProfile.id,
+          fullname: jsonProfile.name,
+          profileImg: jsonProfile.picture
         }).exec(function (err, user) {
           if (user) {
             return done(null, user, { message: 'Logged In Successfully' });
           } else {
-            return done(err, null, { message: 'There was an error logging you in with Google' });
+            return done(err, null, { message: 'Error creating google user: ' +  profile.id});
           }
         });
 

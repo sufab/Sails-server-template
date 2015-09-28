@@ -37,8 +37,8 @@ module.exports = {
             if ((err) || (!user)) {
                 return res.error(info.message, { error: err });
             }
-            req.logIn(user, function(err) {
-                if (err) return res.error('Error trying to login (local)', { error: err });
+            req.logIn(user, function(error) {
+                if (error) return res.error('Error trying to login (local)', { error: error });
                 return res.success(info.message, { user: user });
             });
 
@@ -50,33 +50,27 @@ module.exports = {
 // ####################################
     
     'facebook': function (req, res, next) {
-     passport.authenticate('facebook', { scope: ['email', 'user_photos']}, function (err, user, info) {
-            if ((err) || (!user)) {
-                return res.error(info.message, { error: err });
-            }
-            req.logIn(user, function(err) {
-                if (err) return res.error('Error trying to login (Facebook)', { error: err });
-                return res.success(info.message, { user: user });
-            });
-        })(req, res, next);
+         passport.authenticate('facebook-token', { scope: ['email', 'user_photos']}, function (err, user, info) {
+                if (err || (!user)) {
+                    return res.error(info.message, { error: err });
+                }
+                req.logIn(user, function(err) {
+                    if (err) return res.error('Error trying to login (Facebook)', { error: err });
+                    return res.success(info.message, { user: user });
+                });
+            })(req, res, next);
     },
 
-    'facebook/callback': function (req, res, next) {
-     passport.authenticate('facebook',
-        function (req, res) {
-            res.success('', { user: req.session.user });
-        })(req, res, next);
-    },
-  
 // ####################################
 // #########  Google   ################
 // ####################################
 
     'google': function (req, res, next) {
-     passport.authenticate('google', { scope: 'email'}, function (err, user, info) {
-            if ((err) || (!user)) {
+     passport.authenticate('google-token', { scope: ['email']}, function (err, user, info) {
+            if (err || (!user)) {
                 return res.error(info.message, { error: err });
             }
+            
             req.logIn(user, function(err) {
                 if (err) return res.error('Error trying to login (Google)', { error: err });
                 return res.success(info.message, { user: user });
@@ -84,10 +78,4 @@ module.exports = {
         })(req, res, next);
     },
 
-    'google/callback': function (req, res, next) {
-     passport.authenticate('google',
-        function (req, res) {
-            res.success('', { user: req.session.user });
-        })(req, res, next);
-    }
 };
