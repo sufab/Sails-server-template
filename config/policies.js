@@ -12,5 +12,10 @@ module.exports.policies = {
   'FileController': {
     '*': 'isAuthenticated'
   },
-  
+
+  'UserController':{
+    'find': 'isAdmin',
+    'update': 'canEdit',
+  },
+
 };

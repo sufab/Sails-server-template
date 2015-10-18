@@ -4,7 +4,9 @@ module.exports = {
     attributes: {
         username: {
             type: 'string',
-            unique: true
+            unique: true,
+            maxLength: 9,
+            minLength: 9
         },
         password: {
             type: 'string',
@@ -22,20 +24,18 @@ module.exports = {
             type: 'string',
             email: true
         },
-        fullname: {
+        firstName: {
             type: 'string'
         },
-        phone: {
-            type: 'string'
-        },
-        country: {
-            type: 'string'
-        },
-        birthYear: {
+        lastName: {
             type: 'string'
         },
         profileImg: {
             type: 'string'
+        },
+        isAdmin: {
+          type: 'boolean',
+          defaultsTo: false
         },
         toJSON: function() {
             var obj = this.toObject();
@@ -46,6 +46,7 @@ module.exports = {
     beforeCreate: function(user, cb) {
         // only for local auth
         if (user.password) {
+            // TODO: check valid id of user --> if(isValidId(user.id)
             bcrypt.genSalt(10, function(err, salt) {
                 bcrypt.hash(user.password, salt, function(err, hash) {
                     if (err) {
@@ -70,5 +71,5 @@ module.exports = {
         delete valuesToUpdate.googleId;
         cb();
     }
-    
+
 };

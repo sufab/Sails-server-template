@@ -26,7 +26,7 @@ module.exports.connections = {
 
   mongo: {
     adapter: 'sails-mongo',
-    url: 'mongodb://username:password@path:port/db'
+    url: 'mongodb://localhost:27017/easy_track'
   },
 
   somePostgresqlServer: {
