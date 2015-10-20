@@ -18,4 +18,12 @@ module.exports.policies = {
     'update': 'canEdit',
   },
 
+  'WorkTimeController':{
+    '*': 'canEdit',
+    'find': 'isAdmin'
+  },
+
+  'ProjectsController':{
+    '*': 'isAdmin'
+  }
 };

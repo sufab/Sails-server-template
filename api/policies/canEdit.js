@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
         return next();
       }
       else{
-        if(req.param('id') == userid){
+        if(req.param('id') == userid || req.param('user') == userid){
           return next();
         }
         return res.forbidden('Access denied');
